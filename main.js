@@ -1,6 +1,8 @@
 var canvas = document.getElementById("canvas");
 var context = canvas.getContext("2d");
 
+var playerIsReady = false;
+
 var keys = {
 	32 : "space",
 	37 : "left",
@@ -62,7 +64,6 @@ function playSound(sound){
 	s.play();
 }
 
-
 function advanceAnimations(elapsed){
 	Object.keys(animations).forEach(function(name){
 		var anim = animations[name];
@@ -101,7 +102,7 @@ function overlaps(x1,y1,w1,h1,x2,y2,w2,h2){
 var player = {
 	x : 350,
 	y : 500,
-	speed : .6
+	speed : 0.6
 };
 
 
@@ -115,7 +116,7 @@ var render = function(time){
 		advanceAnimations(elapsed);
 		fireTimer += elapsed;
 
-		while(meteors.length < 1){
+		while(meteors.length < 2){
 			meteors.push({
 				x : (Math.floor(Math.random() * canvas.width - animations.meteor.frameWidth)),
 				y : -animations.meteor.image.height
@@ -123,20 +124,35 @@ var render = function(time){
 		}
 		if(!gameOver){
 			if(pressed["left"]){
-				player.x -= player.speed * elapsed;
+				if (player.x > 0) {
+					player.x -= player.speed * elapsed;
+				}
 			}
 			if(pressed["right"]){
-				player.x += player.speed * elapsed;
+				if(player.x < 730){
+					player.x += player.speed * elapsed;
+				}
 			}
 			if(pressed["up"]){
-				player.y -= player.speed * elapsed;
+				if(player.y > 0){
+					player.y -= player.speed * elapsed;
+				}
 			}
 			if(pressed["down"]){
-				player.y += player.speed * elapsed;
+				if (player.y < 540) {
+					player.y += player.speed * elapsed;
+				}
 			}
 			if(pressed["space"] && fireTimer > fireTimerMax){
 				fireTimer = 0;
 				playSound(laser);
+				//TODO: Add PowerUp
+				if(score > 5){
+				fireTimer = 50;
+				}
+				if(score > 10){
+					fireTimer = 0;
+				}
 				bullets.push({x: player.x + (animations.ship.frameWidth / 2) - (animations.bullet.frameWidth / 2), y: player.y - animations.bullet.image.height
 				});
 			}
@@ -164,7 +180,9 @@ var render = function(time){
 	for(var i = 0; i < meteors.length; i++){
 		var meteor = meteors[i];
 		drawAnimation(context, "meteor", meteor.x, meteor.y);
-		meteor.y += 1 * elapsed;
+		//Fast Meteor: 1 Slow Meteor: .5
+		//TODO: Set to random number between 0 - 1
+		meteor.y +=  (.55) * elapsed;
 		if(meteor.y > canvas.height){
 			meteors.splice(i,1);
 			i--;
@@ -182,7 +200,11 @@ var render = function(time){
 	if(gameOver){
 		context.fillStyle = "#fff";
 		context.fillText("GAME OVER!", 300, 300);
+		playerIsReady = false;
 	}
 	window.requestAnimationFrame(render);
 }
-window.requestAnimationFrame(render);
+
+function playerReady(){
+	window.requestAnimationFrame(render);
+}
