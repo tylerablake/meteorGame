@@ -182,7 +182,7 @@ var render = function(time){
 		drawAnimation(context, "meteor", meteor.x, meteor.y);
 		//Fast Meteor: 1 Slow Meteor: .5
 		//TODO: Set to random number between 0 - 1
-		meteor.y +=  (.55) * elapsed;
+		meteor.y +=  (0.55) * elapsed;
 		if(meteor.y > canvas.height){
 			meteors.splice(i,1);
 			i--;
@@ -203,7 +203,7 @@ var render = function(time){
 		playerIsReady = false;
 	}
 	window.requestAnimationFrame(render);
-}
+};
 
 function playerReady(){
 	window.requestAnimationFrame(render);
