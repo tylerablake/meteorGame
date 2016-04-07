@@ -2,6 +2,8 @@
 <html>
 	<head>
 		<title>Meteor!</title>
+		<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+		<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js">
 		<style type="text/css">
 			body{
 				background-color: #000;
@@ -31,9 +33,11 @@
 		</style>
 	</head>
 	<body>
-		<div style="padding-left:25%;">
-			<p>Use arrow keys to move and spacebar to shoot! If you die,just refresh the webpage to try again.</p>
-			<button id="readyButton" onclick="playerReady()">Play</button>
+		<div class="col-md-12">
+			<div class="col-md-8 col-md-offset-3">
+				<p>Use arrow keys to move and spacebar to shoot! If you die,just refresh the webpage to try again.</p>
+				<div class="btn btn-primary col-md-3 col-md-offset-2" onclick="playerReady()">Play!</div>
+			</div>
 		</div>
 		<canvas id="canvas" width="800" height="600"></canvas>
 		<script type="text/javascript" src="main.js"></script>

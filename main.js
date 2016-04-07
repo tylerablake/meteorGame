@@ -3,6 +3,12 @@ var context = canvas.getContext("2d");
 
 var playerIsReady = false;
 
+var speed;
+var meteorSpeeds = [0.2, 0.4, 0.6];
+
+var meteorCount;
+var meteorCounts = [1,2,3,3];
+
 var keys = {
 	32 : "space",
 	37 : "left",
@@ -116,43 +122,43 @@ var render = function(time){
 		advanceAnimations(elapsed);
 		fireTimer += elapsed;
 
-		while(meteors.length < 2){
+		while(meteors.length < meteorCounts[Math.floor(Math.random()*meteorCounts.length)]){
 			meteors.push({
 				x : (Math.floor(Math.random() * canvas.width - animations.meteor.frameWidth)),
 				y : -animations.meteor.image.height
 			});
 		}
 		if(!gameOver){
-			if(pressed["left"]){
+			if(pressed.left){
 				if (player.x > 0) {
 					player.x -= player.speed * elapsed;
 				}
 			}
-			if(pressed["right"]){
+			if(pressed.right){
 				if(player.x < 730){
 					player.x += player.speed * elapsed;
 				}
 			}
-			if(pressed["up"]){
+			if(pressed.up){
 				if(player.y > 0){
 					player.y -= player.speed * elapsed;
 				}
 			}
-			if(pressed["down"]){
+			if(pressed.down){
 				if (player.y < 540) {
 					player.y += player.speed * elapsed;
 				}
 			}
-			if(pressed["space"] && fireTimer > fireTimerMax){
+			if(pressed.space && fireTimer > fireTimerMax){
 				fireTimer = 0;
 				playSound(laser);
 				//TODO: Add PowerUp
-				if(score > 5){
-				fireTimer = 50;
-				}
-				if(score > 10){
-					fireTimer = 0;
-				}
+				// if(score > 5){
+				// fireTimer = 50;
+				// }
+				// if(score > 10){
+				// 	fireTimer = 0;
+				// }
 				bullets.push({x: player.x + (animations.ship.frameWidth / 2) - (animations.bullet.frameWidth / 2), y: player.y - animations.bullet.image.height
 				});
 			}
@@ -180,9 +186,13 @@ var render = function(time){
 	for(var i = 0; i < meteors.length; i++){
 		var meteor = meteors[i];
 		drawAnimation(context, "meteor", meteor.x, meteor.y);
+
 		//Fast Meteor: 1 Slow Meteor: .5
 		//TODO: Set to random number between 0 - 1
-		meteor.y +=  (0.55) * elapsed;
+
+		speed = meteorSpeeds[Math.floor(Math.random()*meteorSpeeds.length)];
+
+		meteor.y += (0.4) * elapsed;
 		if(meteor.y > canvas.height){
 			meteors.splice(i,1);
 			i--;
@@ -206,5 +216,5 @@ var render = function(time){
 };
 
 function playerReady(){
-	window.requestAnimationFrame(render);
+		window.requestAnimationFrame(render);
 }
